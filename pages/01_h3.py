@@ -74,12 +74,10 @@ def create_map():
                 output_widget.outputs = ()
                 if len(m.draw_features_selected) > 0:
                     geojson = m.draw_features_selected[0]["geometry"]
-                df = con.sql(
-                    f"""
+                df = con.sql(f"""
                 SELECT * EXCLUDE (geometry), ST_AsText(geometry) AS geometry FROM h3_res4_geo
                 WHERE ST_Intersects(geometry, ST_GeomFromGeoJSON('{json.dumps(geojson)}'));
-                """
-                ).df()
+                """).df()
                 gdf = leafmap.df_to_gdf(df)
                 if "H3 Hexagon" in m.layer_dict:
                     m.remove_layer("H3 Hexagon")
